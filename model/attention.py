@@ -3,27 +3,11 @@ import torch.nn.functional as F
 
 
 class ScaledDotProductAttention:
-    """
-    Implements scaled dot-product attention from scratch.
-    """
 
     def __init__(self, dropout: float = 0.0):
         self.dropout = torch.nn.Dropout(dropout)
 
-    def __call__(
-        self,
-        query: torch.Tensor,
-        key: torch.Tensor,
-        value: torch.Tensor,
-        mask: torch.Tensor = None
-    ) -> torch.Tensor:
-        """
-        query, key, value:
-            shape = (batch_size, num_heads, seq_len, head_dim)
-
-        mask:
-            shape = (batch_size, 1, 1, seq_len)
-        """
+    def __call__(self,query,key,value,mask= None):
 
         d_k = query.size(-1)
 

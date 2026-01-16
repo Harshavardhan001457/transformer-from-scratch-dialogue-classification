@@ -6,9 +6,8 @@ from typing import List, Tuple
 import torch
 from torch.utils.data import Dataset
 
-# -------------------------
 # Special Tokens
-# -------------------------
+
 PAD_TOKEN = "<PAD>"
 UNK_TOKEN = "<UNK>"
 CLS_TOKEN = "<CLS>"
@@ -17,26 +16,17 @@ SEP_TOKEN = "<SEP>"
 SPECIAL_TOKENS = [PAD_TOKEN, UNK_TOKEN, CLS_TOKEN, SEP_TOKEN]
 
 
-# -------------------------
 # Basic Tokenizer
-# -------------------------
-def tokenize(text: str) -> List[str]:
-    """
-    Simple word-level tokenizer.
-    """
+
+def tokenize(text):
     text = text.lower()
     text = re.sub(r"[^a-z0-9\s]", "", text)
     return text.split()
 
 
-# -------------------------
 # Vocabulary Builder
-# -------------------------
-def build_vocab(dialogues: List[List[str]],
-                min_freq: int = 2) -> dict:
-    """
-    Builds word-to-index vocabulary.
-    """
+
+def build_vocab(dialogues,min_freq= 2):
     counter = Counter()
 
     for dialogue in dialogues:
@@ -53,45 +43,20 @@ def build_vocab(dialogues: List[List[str]],
     return vocab
 
 
-# -------------------------
 # Encoding Utilities
-# -------------------------
-def encode_tokens(tokens: List[str], vocab: dict) -> List[int]:
-    """
-    Converts tokens to indices.
-    """
+def encode_tokens(tokens, vocab):
     return [vocab.get(token, vocab[UNK_TOKEN]) for token in tokens]
 
 
-def pad_sequence(seq: List[int], max_len: int, pad_value: int) -> List[int]:
-    """
-    Pads or truncates sequence.
-    """
+def pad_sequence(seq, max_len, pad_value):
     if len(seq) >= max_len:
         return seq[:max_len]
     return seq + [pad_value] * (max_len - len(seq))
 
 
-# -------------------------
 # Dataset Class
-# -------------------------
 class DailyDialogDataset(Dataset):
-    """
-    Dataset for multi-turn dialogue classification.
-    """
-
-    def __init__(
-        self,
-        dialogues: List[List[str]],
-        labels: List[List[int]],
-        vocab: dict,
-        context_size: int = 2,
-        max_len: int = 128
-    ):
-        """
-        dialogues: List of dialogues (each dialogue is list of utterances)
-        labels: List of label sequences (aligned with utterances)
-        """
+    def __init__(self,dialogues,labels,vocab,context_size= 2,max_len= 128):
         self.samples = []
         self.vocab = vocab
         self.max_len = max_len
@@ -124,14 +89,9 @@ class DailyDialogDataset(Dataset):
         return self.samples[idx]
 
 
-# -------------------------
 # Data Loader Helper
-# -------------------------
-def load_dailydialog_json(path: str) -> Tuple[List[List[str]], List[List[int]]]:
-    """
-    Loads DailyDialog-style JSON file.
-    Expected keys: 'dialogues', 'labels'
-    """
+
+def load_dailydialog_json(path):
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
 

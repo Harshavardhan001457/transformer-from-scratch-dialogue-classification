@@ -5,18 +5,7 @@ from torch.optim import Adam
 from training.evaluate import evaluate
 from utils.masking import create_padding_mask
 
-def train(
-    model,
-    train_loader,
-    val_loader,
-    device,
-    epochs: int = 5,
-    lr: float = 1e-4
-):
-    """
-    Trains the Transformer classifier.
-    """
-
+def train(model,train_loader,val_loader,device,epochs= 5,lr= 1e-4):
     model.to(device)
     optimizer = Adam(model.parameters(), lr=lr)
     criterion = CrossEntropyLoss()
@@ -28,7 +17,6 @@ def train(
         for input_ids, labels in train_loader:
             input_ids = input_ids.to(device)
             labels = labels.to(device)
-            # Use pad_idx=0 as it is the index for <PAD> token
             mask = create_padding_mask(input_ids, pad_idx=0)
             optimizer.zero_grad()
 

@@ -1,21 +1,14 @@
 import torch, os
 from torch.utils.data import DataLoader
 
-from utils.datautils import (
-    build_vocab,
-    load_dailydialog_json,
-    DailyDialogDataset
-)
-from utils.masking import create_padding_mask
 from utils.datautils import load_dataset
 from model.classifier import TransformerDialogueClassifier
 from training.train import train
 from training.evaluate import evaluate
 
 
-# -------------------------
 # Configuration
-# -------------------------
+
 DATA_PATH1 = "./data/train_data.json"
 DATA_PATH2 = "./data/val_data.json"
 DATA_PATH3 = "./data/test_data.json"
